@@ -1,0 +1,11 @@
+/*
+ * guitar-anatomy — custom styles
+ *
+ * This file covers things Tailwind can't do cleanly:
+ *   - glassmorphism cards (.glass-card)
+ *   - glow / halo effects on SVG parts
+ *   - keyframe animations (explode, pulse, fade-in)
+ *   - signal-path highlight states
+ *
+ * Populated in steps 4–7.
+ */

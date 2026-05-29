@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Electric Guitar Anatomy</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/style.css" />
+
+  <style>
+    html { scroll-behavior: smooth; }
+  </style>
+</head>
+
+<body class="bg-gray-950 text-gray-100 min-h-screen font-sans">
+
+  <!-- ===================== NAVBAR ===================== -->
+  <nav class="sticky top-0 z-50 bg-gray-950/90 backdrop-blur border-b border-gray-800">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+
+      <!-- Site title / brand -->
+      <span class="text-lg font-semibold tracking-wide text-white">
+        Electric Guitar Anatomy
+      </span>
+
+      <!-- Section anchor links -->
+      <ul class="flex gap-6 text-sm text-gray-400">
+        <li><a href="#anatomy"     class="hover:text-white transition-colors">Anatomy</a></li>
+        <li><a href="#signal-path" class="hover:text-white transition-colors">Signal Path</a></li>
+        <li><a href="#how-it-works"class="hover:text-white transition-colors">How It Works</a></li>
+        <li><a href="#specs"       class="hover:text-white transition-colors">Specs</a></li>
+      </ul>
+
+    </div>
+  </nav>
+
+  <!-- ===================== MAIN CONTENT ===================== -->
+  <main>
+
+    <!-- HERO -------------------------------------------------- -->
+    <section id="hero" class="min-h-screen flex flex-col items-center justify-center text-center px-6">
+      <h1 class="text-5xl md:text-7xl font-bold tracking-tight text-white mb-4">
+        Electric Guitar Anatomy
+      </h1>
+      <p class="text-lg md:text-xl text-gray-400 mb-10 max-w-xl">
+        Explore every component of a Stratocaster — how it's built, how it sounds, and why it matters.
+      </p>
+      <a
+        href="#anatomy"
+        class="inline-block px-8 py-3 rounded-full border border-gray-600 text-gray-200 hover:border-white hover:text-white transition-colors text-sm tracking-widest uppercase"
+      >
+        Explore the anatomy ↓
+      </a>
+    </section>
+
+    <!-- ANATOMY ----------------------------------------------- -->
+    <section id="anatomy" class="min-h-screen px-6 py-24 max-w-6xl mx-auto">
+      <h2 class="text-3xl font-bold text-white mb-6">Anatomy</h2>
+      <!-- Guitar SVG and explode controls go here in -->
+      <p class="text-gray-500 italic">[ Guitar SVG + explode interaction ]</p>
+    </section>
+
+    <!-- SIGNAL PATH ------------------------------------------- -->
+    <section id="signal-path" class="min-h-screen px-6 py-24 bg-gray-900/50">
+      <div class="max-w-6xl mx-auto">
+        <h2 class="text-3xl font-bold text-white mb-6">Signal Path</h2>
+        <!-- Interactive signal path diagram goes here  -->
+        <p class="text-gray-500 italic">[ Signal path mode]</p>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS ------------------------------------------ -->
+    <section id="how-it-works" class="min-h-screen px-6 py-24 max-w-6xl mx-auto">
+      <h2 class="text-3xl font-bold text-white mb-6">How It Works</h2>
+      <!-- Explanatory content goes  -->
+      <p class="text-gray-500 italic">[ How-it-works content]</p>
+    </section>
+
+    <!-- SPECS ------------------------------------------------- -->
+    <section id="specs" class="min-h-screen px-6 py-24 bg-gray-900/50">
+      <div class="max-w-6xl mx-auto">
+        <h2 class="text-3xl font-bold text-white mb-6">Specifications</h2>
+        <!-- Spec table/content goes here -->
+        <p class="text-gray-500 italic">[ Specifications ]</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="border-t border-gray-800 px-6 py-10 text-center text-xs text-gray-600">
+    <p class="mb-1">Electric Guitar Anatomy — an interactive exploded-view reference.</p>
+    <p>Guitar artwork sourced from a public-domain illustration. All other content © 2026.</p>
+  </footer>
+
+  <script src="js/main.js" defer></script>
+
+</body>
+</html>
