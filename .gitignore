@@ -1,0 +1,13 @@
+# Working / local files
+CLAUDE.md
+
+# OS noise
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+*.log
+
+# Dependencies (in case you add any later)
+node_modules/
