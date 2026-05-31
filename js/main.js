@@ -2,6 +2,70 @@ document.addEventListener('DOMContentLoaded', () => {
   initHotspots();
 });
 
+// ── Part content ──────────────────────────────────────────────────────────────
+// Keyed by data-part value. Each entry has title, func (Function), tonal (Tonal impact).
+const PART_CONTENT = {
+  body: {
+    title: 'Body',
+    func:  'The solid slab (typically alder, ash, or basswood) that anchors the bridge, pickups, and electronics and transfers string vibration through the wood.',
+    tonal: 'Tonewood and mass shape resonance and sustain — alder is balanced and full-spectrum, ash adds bright snap and upper mids, and heavier bodies generally lengthen sustain.',
+  },
+  neck: {
+    title: 'Neck & Fretboard',
+    func:  'The clamped maple neck carries string tension and sets scale length; the fretboard surface (maple or rosewood) defines where notes are stopped.',
+    tonal: 'Fretboard material colors the attack — maple is bright and tight, rosewood warmer with softened highs; neck stiffness and scale length affect tension and harmonic clarity.',
+  },
+  tuners: {
+    title: 'Tuning Machines',
+    func:  'Geared tuners on the headstock adjust string tension to set and hold precise pitch, with the gear ratio setting tuning resolution.',
+    tonal: 'Primarily about stability, but solid tuners preserve tuning under bends and tremolo use, and headstock mass can subtly influence sustain.',
+  },
+  strings: {
+    title: 'Strings',
+    func:  'Ferromagnetic strings vibrate over the pickups; their gauge and core (round or flat wound) set the fundamental and harmonic content the pickups translate into signal.',
+    tonal: 'Heavier gauges give more output, fuller lows, and longer sustain; lighter gauges favor easier bends and brighter response. Fresh strings emphasize upper harmonics.',
+  },
+  pickups: {
+    title: 'Pickups',
+    func:  'Magnetic coils sense string vibration via electromagnetic induction, converting it into the signal sent to the amp; the three-single-coil layout offers neck, middle, and bridge positions.',
+    tonal: 'The defining tonal element — single coils are bright, glassy, and articulate; the bridge pickup is brightest and hottest, the neck warmest and roundest.',
+  },
+  pickguard: {
+    title: 'Pickguard',
+    func:  'A laminated plate that mounts the pickups, controls, and switch as one assembly and protects the finish from pick wear.',
+    tonal: 'Largely cosmetic and structural, with minimal direct tonal effect, though it can very slightly damp body resonance.',
+  },
+  switch: {
+    title: 'Pickup Selector',
+    func:  'The five-way blade switch routes which pickup or combination feeds the output: neck, neck+middle, middle, middle+bridge, and bridge.',
+    tonal: 'Positions 2 and 4 combine two pickups for the hollow, out-of-phase ‘quack’ prized in funk and clean tones; end positions isolate a single pickup’s character.',
+  },
+  controls: {
+    title: 'Control Knobs',
+    func:  'A master volume plus tone controls attenuate signal level and roll off high frequencies through a capacitor.',
+    tonal: 'Volume interacts with the amp’s input to clean up or push gain; the tone pot bleeds treble to ground for darker voicings without changing pickup selection.',
+  },
+  bridge: {
+    title: 'Bridge & Tremolo',
+    func:  'The synchronized tremolo bridge anchors the strings, sets intonation and string height at the saddles, and pivots to vary pitch via the arm.',
+    tonal: 'Saddle material and bridge mass affect sustain and brightness; a floating tremolo adds shimmer but trades some sustain and tuning stability versus a decked or hardtail setup.',
+  },
+  jack: {
+    title: 'Output Jack',
+    func:  'The mono ¼-inch jack delivers the combined signal from the electronics to the instrument cable and on to the amplifier.',
+    tonal: 'No tonal shaping of its own, but a clean connection prevents the signal loss, crackle, and dropouts that would degrade the output.',
+  },
+};
+
+// Non-interactive linked parts: map to the lead part whose content should show.
+const PART_LEAD = {
+  frets:     'neck',
+  tunerbtns: 'tuners',
+  covers:    'bridge',
+};
+
+// ── Part interaction ──────────────────────────────────────────────────────────
+
 // Parts that open an info card when clicked/focused.
 // frets, tunerbtns, covers are non-interactive but stay highlighted
 // when their linked partner is selected (see PART_GROUPS below).
@@ -51,7 +115,6 @@ function initHotspots() {
     if (glowEl) {
       guitar.classList.add('guitar-has-active');
       const linked = linkedParts(glowEl.dataset.part);
-      // Apply part-active to every part in the linked set (interactive or not)
       allParts.forEach(p => {
         if (linked.includes(p.dataset.part)) p.classList.add('part-active');
       });
@@ -63,8 +126,16 @@ function initHotspots() {
   function openCard(el) {
     selectedPart = el;
     setHighlight(el);
-    card.querySelector('.card-title').textContent = el.dataset.name;
-    card.querySelector('.card-body').textContent = 'Description coming soon.';
+
+    // Non-interactive linked parts (frets, tunerbtns, covers) show their
+    // lead part's content; all other parts use their own data-part key.
+    const key  = PART_LEAD[el.dataset.part] || el.dataset.part;
+    const info = PART_CONTENT[key];
+
+    card.querySelector('.card-title').textContent         = info ? info.title : el.dataset.name;
+    card.querySelector('.card-function-text').textContent = info ? info.func  : '';
+    card.querySelector('.card-tonal-text').textContent    = info ? info.tonal : '';
+
     card.classList.remove('card-hidden');
     positionCard(el);
   }
@@ -129,7 +200,14 @@ function initHotspots() {
     el.innerHTML =
       '<button class="card-close" aria-label="Close info card">&times;</button>' +
       '<h3 class="card-title"></h3>' +
-      '<p class="card-body"></p>';
+      '<div class="card-section">' +
+        '<span class="card-label">Function</span>' +
+        '<p class="card-text card-function-text"></p>' +
+      '</div>' +
+      '<div class="card-section">' +
+        '<span class="card-label">Tonal impact</span>' +
+        '<p class="card-text card-tonal-text"></p>' +
+      '</div>';
     el.querySelector('.card-close').addEventListener('click', e => {
       e.stopPropagation();
       closeCard();
