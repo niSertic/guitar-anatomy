@@ -1,11 +1,143 @@
 /*
  * guitar-anatomy — custom styles
  *
- * This file covers things Tailwind can't do cleanly:
- *   - glassmorphism cards (.glass-card)
- *   - glow / halo effects on SVG parts
- *   - keyframe animations (explode, pulse, fade-in)
- *   - signal-path highlight states
- *
- * Populated in steps 4–7.
+ * Covers things Tailwind can't do cleanly:
+ *   - guitar stage layout & radial vignette
+ *   - hotspot highlight / dim states
+ *   - glassmorphism info card (.glass-card)
+ *   - signal-path highlight states  — step 5
  */
+
+/* ── #anatomy layout ─────────────────────────────────────── */
+/* scroll-margin-top offsets anchor-jump by the sticky navbar height */
+#anatomy {
+  scroll-margin-top: 60px;
+}
+
+/* ── Guitar wrapper ───────────────────────────────────────── */
+/* Landscape guitar: wide and short (~2.3:1), so width drives the layout */
+.guitar-wrapper {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* ── Guitar stage ─────────────────────────────────────────── */
+.guitar-stage {
+  position: relative;
+  max-width: 1100px;
+  margin: 1rem auto 0;
+  /* Subtle warm radial glow behind the guitar — dark studio feel */
+  background: radial-gradient(
+    ellipse 70% 55% at 50% 48%,
+    rgba(160, 90, 50, 0.12) 0%,
+    rgba(30, 20, 10, 0.18) 55%,
+    transparent 100%
+  );
+  border-radius: 12px;
+}
+
+/* SVG fills container width; height follows the 1148:499 viewBox ratio */
+.guitar-stage svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* ── Hotspot interaction ──────────────────────────────────── */
+
+/* JS sets role="button" only on interactive parts */
+#guitar [role="button"] {
+  cursor: pointer;
+}
+
+/* Smooth opacity + glow transitions on every part group */
+#guitar [data-part] {
+  transition: opacity 0.22s ease, filter 0.22s ease;
+}
+
+/* Dim non-active parts only while a selection is active.
+   .guitar-has-active guard means resting state = all parts at full opacity.
+   :not(.part-active) means this rule never fires on the selected group or
+   its linked partners — zero cascade conflict.
+   !important overrides SVG inline style="opacity:1" on the body path. */
+#guitar.guitar-has-active [data-part]:not(.part-active) {
+  opacity: 0.3 !important;
+}
+
+/* Selected/linked parts: exact original appearance.
+   Highlight effect comes from others dimming — no filter or brightness
+   change that could alter fill or texture. */
+#guitar.guitar-has-active [data-part].part-active {
+  opacity: 1 !important;
+}
+
+/* ── Glassmorphic info card ───────────────────────────────── */
+.glass-card {
+  position: fixed;
+  z-index: 200;
+  width: 240px;
+  padding: 1rem 1.1rem 1.1rem;
+  background: rgba(12, 14, 18, 0.82);
+  -webkit-backdrop-filter: blur(20px) saturate(1.6);
+  backdrop-filter: blur(20px) saturate(1.6);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 12px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.55),
+              inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  color: #f3f4f6;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.glass-card.card-hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(4px) scale(0.98);
+}
+
+.card-close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.55rem;
+  background: none;
+  border: none;
+  color: #6b7280;
+  font-size: 1rem;
+  line-height: 1;
+  padding: 0.2rem 0.35rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+
+.card-close:hover,
+.card-close:focus-visible {
+  color: #f3f4f6;
+  outline: none;
+}
+
+.card-title {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #e5e7eb;
+  margin: 0 1.5rem 0.5rem 0;
+  padding: 0;
+}
+
+.card-body {
+  font-size: 0.8rem;
+  line-height: 1.55;
+  color: #9ca3af;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── Reduced motion ───────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  #guitar [data-part],
+  .glass-card,
+  .card-close {
+    transition: none !important;
+  }
+}
