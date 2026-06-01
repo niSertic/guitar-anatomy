@@ -148,11 +148,316 @@
   margin: 0;
 }
 
+/* ── Anatomy instruction hint ─────────────────────────────── */
+.anatomy-hint {
+  text-align: center;
+  font-size: 0.78rem;
+  color: #6b7280;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.75rem;
+  pointer-events: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* ── Parts list ───────────────────────────────────────────── */
+.parts-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  justify-content: center;
+  margin-top: 1rem;
+  padding: 0;
+}
+
+.parts-list-item {
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #6b7280;
+  padding: 0.28rem 0.72rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+  cursor: pointer;
+  background: transparent;
+  transition: color 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+  white-space: nowrap;
+}
+
+.parts-list-item:hover,
+.parts-list-item:focus-visible {
+  color: #d1d5db;
+  border-color: rgba(255, 255, 255, 0.22);
+  outline: none;
+}
+
+/* Matches the guitar's warm-glow active state */
+.parts-list-item.list-active {
+  color: #f9fafb;
+  border-color: rgba(255, 165, 50, 0.5);
+  background: rgba(255, 165, 50, 0.07);
+}
+
 /* ── Reduced motion ───────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   #guitar [data-part],
   .glass-card,
-  .card-close {
+  .card-close,
+  .parts-list-item {
+    transition: none !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   Signal Path section
+   ═══════════════════════════════════════════════════════════ */
+
+#signal-path {
+  scroll-margin-top: 60px;
+}
+
+/* ── Diagram wrapper ──────────────────────────────────────── */
+.sp-diagram-wrap {
+  position: relative;
+  margin: 0.5rem 0 2rem;
+}
+
+/* ── SVG connector overlay ────────────────────────────────── */
+.sp-connector-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.sp-track {
+  stroke: rgba(255, 255, 255, 0.12);
+  stroke-width: 1.5;
+}
+
+.sp-dot {
+  fill: #f97316;
+  opacity: 0;
+  filter: url(#sp-glow-filter);
+  transition: opacity 0.15s ease;
+}
+
+/* ── Nodes row ────────────────────────────────────────────── */
+.sp-nodes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  row-gap: 2rem;
+  position: relative;
+  z-index: 1;
+  padding: 1.5rem 0;
+}
+
+.sp-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  flex: 0 0 calc(100% / 6);
+  cursor: pointer;
+}
+
+@media (max-width: 700px) {
+  .sp-nodes {
+    justify-content: center;
+    column-gap: 1rem;
+  }
+  .sp-node {
+    flex: 0 0 calc(33% - 1rem);
+  }
+}
+
+@media (max-width: 420px) {
+  .sp-node {
+    flex: 0 0 calc(50% - 0.5rem);
+  }
+}
+
+/* ── Node ring ────────────────────────────────────────────── */
+.sp-node-ring {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.22s ease, background 0.22s ease, box-shadow 0.22s ease;
+}
+
+/* Amplifier node is external — dashed border signals it's outside the guitar */
+.sp-node[data-sp="amp"] .sp-node-ring {
+  border-style: dashed;
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.sp-node-num {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #6b7280;
+  letter-spacing: 0;
+  transition: color 0.22s ease;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.sp-node-label {
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #6b7280;
+  text-align: center;
+  max-width: 84px;
+  line-height: 1.35;
+  transition: color 0.22s ease;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* ── Hover / focus ────────────────────────────────────────── */
+.sp-node:hover .sp-node-ring,
+.sp-node:focus-visible .sp-node-ring {
+  border-color: rgba(255, 255, 255, 0.38);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.sp-node:hover .sp-node-label,
+.sp-node:focus-visible .sp-node-label {
+  color: #d1d5db;
+}
+
+.sp-node:hover .sp-node-num,
+.sp-node:focus-visible .sp-node-num {
+  color: #d1d5db;
+}
+
+.sp-node:focus-visible {
+  outline: none;
+}
+
+.sp-node:focus-visible .sp-node-ring {
+  box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.5);
+}
+
+/* ── Active (clicked) ─────────────────────────────────────── */
+.sp-node.sp-node-active .sp-node-ring {
+  border-color: rgba(249, 115, 22, 0.75);
+  border-style: solid;
+  background: rgba(249, 115, 22, 0.09);
+  box-shadow: 0 0 14px rgba(249, 115, 22, 0.22);
+}
+
+.sp-node.sp-node-active .sp-node-label,
+.sp-node.sp-node-active .sp-node-num {
+  color: #f97316;
+}
+
+/* ── Pulse-lit flash (as dot passes through) ──────────────── */
+.sp-node.sp-node-lit .sp-node-ring {
+  border-color: rgba(249, 115, 22, 0.95);
+  border-style: solid;
+  background: rgba(249, 115, 22, 0.18);
+  box-shadow: 0 0 22px rgba(249, 115, 22, 0.55),
+              0 0 48px rgba(249, 115, 22, 0.2);
+}
+
+.sp-node.sp-node-lit .sp-node-num {
+  color: #fed7aa;
+}
+
+/* ── Play button ──────────────────────────────────────────── */
+.sp-controls {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.75rem;
+}
+
+.sp-play-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.03);
+  color: #d1d5db;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.18s ease, color 0.18s ease, background 0.18s ease;
+}
+
+.sp-play-btn:hover,
+.sp-play-btn:focus-visible {
+  border-color: rgba(249, 115, 22, 0.55);
+  color: #f97316;
+  background: rgba(249, 115, 22, 0.06);
+  outline: none;
+}
+
+.sp-play-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+  pointer-events: none;
+}
+
+/* ── Blurb info panel ─────────────────────────────────────── */
+.sp-blurb {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 1.1rem 1.4rem;
+  background: rgba(12, 14, 18, 0.78);
+  -webkit-backdrop-filter: blur(20px) saturate(1.6);
+  backdrop-filter: blur(20px) saturate(1.6);
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4),
+              0 8px 32px rgba(0, 0, 0, 0.3),
+              inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.sp-blurb.sp-blurb-hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(5px);
+}
+
+.sp-blurb-title {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #f97316;
+  margin: 0 0 0.45rem;
+}
+
+.sp-blurb-text {
+  font-size: 0.83rem;
+  line-height: 1.65;
+  color: #d1d5db;
+  margin: 0;
+}
+
+/* ── Signal path reduced motion ───────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .sp-node-ring,
+  .sp-node-label,
+  .sp-node-num,
+  .sp-blurb,
+  .sp-play-btn,
+  .sp-dot {
     transition: none !important;
   }
 }

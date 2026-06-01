@@ -1,9 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
   initHotspots();
+  initSignalPath();
 });
 
 // ── Part content ──────────────────────────────────────────────────────────────
-// Keyed by data-part value. Each entry has title, func (Function), tonal (Tonal impact).
 const PART_CONTENT = {
   body: {
     title: 'Body',
@@ -57,45 +57,202 @@ const PART_CONTENT = {
   },
 };
 
-// Non-interactive linked parts: map to the lead part whose content should show.
+// Non-interactive linked parts map to their lead part's content.
 const PART_LEAD = {
   frets:     'neck',
   tunerbtns: 'tuners',
   covers:    'bridge',
 };
 
-// ── Part interaction ──────────────────────────────────────────────────────────
+// ── Static list definition ────────────────────────────────────────────────────
+// Ordered display list for the parts strip below the guitar.
+const LIST_ITEMS_DEF = [
+  { label: 'Body',             part: 'body'      },
+  { label: 'Neck & Fretboard', part: 'neck'      },
+  { label: 'Tuning Machines',  part: 'tuners'    },
+  { label: 'Strings',          part: 'strings'   },
+  { label: 'Pickups',          part: 'pickups'   },
+  { label: 'Pickguard',        part: 'pickguard' },
+  { label: 'Pickup Selector',  part: 'switch'    },
+  { label: 'Control Knobs',    part: 'controls'  },
+  { label: 'Bridge & Tremolo', part: 'bridge'    },
+  { label: 'Output Jack',      part: 'jack'      },
+];
 
-// Parts that open an info card when clicked/focused.
-// frets, tunerbtns, covers are non-interactive but stay highlighted
-// when their linked partner is selected (see PART_GROUPS below).
+// ── Interaction ───────────────────────────────────────────────────────────────
+
 const INTERACTIVE_PARTS = new Set([
   'body', 'tuners', 'neck', 'strings', 'pickups',
   'pickguard', 'switch', 'controls', 'bridge', 'jack',
 ]);
 
-// Linked highlight groups: selecting any interactive member keeps ALL
-// members (including non-interactive ones) at full opacity.
 const PART_GROUPS = new Map([
-  ['neck',   ['neck',   'frets']],       // frets sits on neck; highlight together
-  ['tuners', ['tuners', 'tunerbtns']],   // buttons are part of the tuner assembly
-  ['bridge', ['bridge', 'covers']],      // spring-cover plate belongs with the bridge
+  ['neck',   ['neck',   'frets']],
+  ['tuners', ['tuners', 'tunerbtns']],
+  ['bridge', ['bridge', 'covers']],
 ]);
 
 function linkedParts(partName) {
   return PART_GROUPS.get(partName) || [partName];
 }
 
+// ── Signal Path ───────────────────────────────────────────────────────────────
+
+const SP_CONTENT = {
+  strings:  { label: 'Strings',          text: 'A plucked ferromagnetic string vibrates at its fundamental and harmonics — purely mechanical motion, no electrical signal yet. This is the raw source.' },
+  pickups:  { label: 'Pickups',          text: 'The vibrating steel string disturbs the coil\'s magnetic field, inducing a tiny alternating voltage (electromagnetic induction). Mechanical vibration becomes an electrical signal here.' },
+  selector: { label: 'Pickup Selector',  text: 'The 5-way switch selects which pickup(s) feed the circuit — one coil or a blend of two — determining which signal and tonal character continues.' },
+  voltone:  { label: 'Volume & Tone',    text: 'The volume pot sets overall level; the tone pot bleeds treble to ground through a capacitor. The signal is shaped in amplitude and brightness before leaving the guitar.' },
+  jack:     { label: 'Output Jack',      text: 'The shaped signal passes to the cable as a low-level, high-impedance audio signal (a few hundred millivolts). The guitar\'s job is done; the signal leaves the instrument.' },
+  amp:      { label: 'Amplifier',        text: 'The cable feeds the weak signal to the amp, which boosts it to drive a speaker — completing the chain. (The amp sits outside the guitar itself.)' },
+};
+
+function initSignalPath() {
+  const diagram    = document.getElementById('sp-diagram');
+  const nodesWrap  = document.getElementById('sp-nodes');
+  const svg        = document.getElementById('sp-svg');
+  const track      = document.getElementById('sp-track');
+  const dot        = document.getElementById('sp-dot');
+  const playBtn    = document.getElementById('sp-play-btn');
+  const blurb      = document.getElementById('sp-blurb');
+  const blurbTitle = document.getElementById('sp-blurb-title');
+  const blurbText  = document.getElementById('sp-blurb-text');
+
+  if (!diagram) return;
+
+  const nodeEls = Array.from(nodesWrap.querySelectorAll('.sp-node'));
+
+  // Read node ring center positions relative to the SVG overlay
+  function nodePoints() {
+    const svgRect = svg.getBoundingClientRect();
+    return nodeEls.map(el => {
+      const r = el.querySelector('.sp-node-ring').getBoundingClientRect();
+      return { x: r.left + r.width  / 2 - svgRect.left,
+               y: r.top  + r.height / 2 - svgRect.top };
+    });
+  }
+
+  // (Re)draw the polyline through all node centers
+  function buildPath() {
+    if (svg.getBoundingClientRect().width === 0) return;
+    const pts = nodePoints();
+    track.setAttribute('d',
+      pts.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' '));
+  }
+
+  // Cumulative distances to each node along the polyline (for pulse sync)
+  function cumLengths() {
+    const pts = nodePoints();
+    const acc = [0];
+    for (let i = 1; i < pts.length; i++) {
+      const dx = pts[i].x - pts[i-1].x, dy = pts[i].y - pts[i-1].y;
+      acc.push(acc[i-1] + Math.sqrt(dx*dx + dy*dy));
+    }
+    return acc;
+  }
+
+  // ── Node interaction ──────────────────────────────────────
+  function activateNode(id) {
+    nodeEls.forEach(el => el.classList.toggle('sp-node-active', el.dataset.sp === id));
+    const c = SP_CONTENT[id];
+    if (!c) return;
+    blurbTitle.textContent = c.label;
+    blurbText.textContent  = c.text;
+    blurb.classList.remove('sp-blurb-hidden');
+  }
+
+  nodeEls.forEach(el => {
+    el.addEventListener('click', () => activateNode(el.dataset.sp));
+    el.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activateNode(el.dataset.sp); }
+    });
+  });
+
+  // ── Pulse animation ───────────────────────────────────────
+  const DURATION = 3000;
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let animId = null;
+
+  function flashNode(el) {
+    el.classList.add('sp-node-lit');
+    setTimeout(() => el.classList.remove('sp-node-lit'), 700);
+  }
+
+  function runPulse() {
+    if (animId) { cancelAnimationFrame(animId); animId = null; }
+
+    buildPath();
+    const totalLen = track.getTotalLength();
+    if (totalLen === 0) return;
+
+    playBtn.disabled = true;
+    playBtn.textContent = 'Playing…';
+
+    if (reducedMotion) {
+      nodeEls.forEach((el, i) => setTimeout(() => flashNode(el), i * 100));
+      setTimeout(() => {
+        playBtn.disabled = false;
+        playBtn.textContent = 'Replay signal';
+      }, nodeEls.length * 100 + 700);
+      return;
+    }
+
+    const lens  = cumLengths();
+    const litSet = new Set();
+    let start = null;
+
+    dot.style.opacity = '1';
+
+    function frame(ts) {
+      if (start === null) start = ts;
+      const t   = Math.min((ts - start) / DURATION, 1);
+      const len = t * totalLen;
+      const pt  = track.getPointAtLength(len);
+
+      dot.setAttribute('cx', pt.x);
+      dot.setAttribute('cy', pt.y);
+
+      nodeEls.forEach((el, i) => {
+        if (!litSet.has(i) && len >= lens[i]) {
+          litSet.add(i);
+          flashNode(el);
+        }
+      });
+
+      if (t < 1) {
+        animId = requestAnimationFrame(frame);
+      } else {
+        dot.style.opacity = '0';
+        playBtn.disabled = false;
+        playBtn.textContent = 'Replay signal';
+        animId = null;
+      }
+    }
+
+    animId = requestAnimationFrame(frame);
+  }
+
+  playBtn.addEventListener('click', runPulse);
+
+  // Redraw connector on resize
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(buildPath, 80);
+  });
+
+  // Initial draw after two frames to ensure layout is settled
+  requestAnimationFrame(() => requestAnimationFrame(buildPath));
+}
+
+// ── Anatomy hotspots ──────────────────────────────────────────────────────────
+
 function initHotspots() {
   const guitar = document.getElementById('guitar');
   if (!guitar) return;
 
-  // ALL part elements — used for applying/clearing part-active so that
-  // non-interactive linked partners (frets, tunerbtns, covers) also respond.
   const allParts = Array.from(guitar.querySelectorAll('[data-part]'));
-
-  // Interactive parts only — get event listeners and open info cards.
-  const parts = allParts.filter(el => INTERACTIVE_PARTS.has(el.dataset.part));
+  const parts    = allParts.filter(el => INTERACTIVE_PARTS.has(el.dataset.part));
 
   parts.forEach(el => {
     el.setAttribute('tabindex', '0');
@@ -108,9 +265,16 @@ function initHotspots() {
 
   let selectedPart = null;
 
-  // Add guitar-has-active to the SVG and part-active to the clicked group
-  // plus any linked partners. Pass null to restore the resting state.
+  // ── Parts list ──────────────────────────────────────────────
+  // listItems is populated below; setHighlight references it via closure.
+  const listItems = [];
+  const listContainer = document.getElementById('parts-list');
+
+  // ── Highlight / dim ─────────────────────────────────────────
+  // Central state function — called by both SVG parts and list buttons.
+  // glowEl: the SVG <g> or <path> element to highlight, or null to reset.
   function setHighlight(glowEl) {
+    // SVG dim/highlight
     allParts.forEach(p => p.classList.remove('part-active'));
     if (glowEl) {
       guitar.classList.add('guitar-has-active');
@@ -121,14 +285,20 @@ function initHotspots() {
     } else {
       guitar.classList.remove('guitar-has-active');
     }
+
+    // Two-way sync: mark the matching list button as active.
+    const activeKey = glowEl
+      ? (PART_LEAD[glowEl.dataset.part] || glowEl.dataset.part)
+      : null;
+    listItems.forEach(btn => {
+      btn.classList.toggle('list-active', btn.dataset.part === activeKey);
+    });
   }
 
   function openCard(el) {
     selectedPart = el;
     setHighlight(el);
 
-    // Non-interactive linked parts (frets, tunerbtns, covers) show their
-    // lead part's content; all other parts use their own data-part key.
     const key  = PART_LEAD[el.dataset.part] || el.dataset.part;
     const info = PART_CONTENT[key];
 
@@ -146,6 +316,7 @@ function initHotspots() {
     card.classList.add('card-hidden');
   }
 
+  // ── SVG part event listeners ────────────────────────────────
   parts.forEach(el => {
     el.addEventListener('mouseenter', ()  => setHighlight(el));
     el.addEventListener('mouseleave', ()  => setHighlight(selectedPart));
@@ -160,14 +331,47 @@ function initHotspots() {
     });
   });
 
-  // Close card when clicking outside both the card and any interactive part.
+  // Close card when clicking outside the card, any SVG part, and the parts list.
   document.addEventListener('click', e => {
     if (!selectedPart) return;
     if (card.contains(e.target)) return;
     if (parts.some(p => p.contains(e.target))) return;
+    if (listContainer && listContainer.contains(e.target)) return;
     closeCard();
   });
 
+  // ── Parts list build ────────────────────────────────────────
+  if (listContainer) {
+    LIST_ITEMS_DEF.forEach(({ label, part }) => {
+      const partEl = parts.find(p => p.dataset.part === part);
+      if (!partEl) return;
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'parts-list-item';
+      btn.dataset.part = part;
+      btn.setAttribute('role', 'listitem');
+      btn.setAttribute('aria-label', label);
+      btn.textContent = label;
+
+      btn.addEventListener('mouseenter', ()  => setHighlight(partEl));
+      btn.addEventListener('mouseleave', ()  => setHighlight(selectedPart));
+      btn.addEventListener('focus',      ()  => setHighlight(partEl));
+      btn.addEventListener('blur',       ()  => setHighlight(selectedPart));
+      btn.addEventListener('click',      ()  => openCard(partEl));
+      btn.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openCard(partEl);
+        }
+      });
+
+      listContainer.appendChild(btn);
+      listItems.push(btn);
+    });
+  }
+
+  // ── Viewport tracking ───────────────────────────────────────
   function onViewportChange() {
     if (selectedPart && !card.classList.contains('card-hidden')) {
       positionCard(selectedPart);
@@ -176,6 +380,7 @@ function initHotspots() {
   window.addEventListener('resize', onViewportChange);
   window.addEventListener('scroll', onViewportChange, { passive: true });
 
+  // ── Card positioning ────────────────────────────────────────
   function positionCard(el) {
     const rect   = el.getBoundingClientRect();
     const CARD_W = 240;
@@ -192,6 +397,7 @@ function initHotspots() {
     card.style.top  = `${top}px`;
   }
 
+  // ── Card construction ───────────────────────────────────────
   function buildCard() {
     const el = document.createElement('div');
     el.className = 'glass-card card-hidden';
