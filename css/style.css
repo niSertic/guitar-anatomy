@@ -527,3 +527,70 @@
   margin: 0;
   max-width: 54ch;
 }
+
+/* ── Specifications ───────────────────────────────────────── */
+#specs {
+  scroll-margin-top: 60px;
+}
+
+.specs-intro {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin: 0 0 2.5rem;
+  max-width: 52ch;
+}
+
+.specs-groups {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+}
+
+@media (min-width: 720px) {
+  .specs-groups {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    align-items: start;
+  }
+}
+
+.specs-group-heading {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #f97316;
+  margin: 0 0 0.9rem;
+}
+
+.specs-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.specs-table tr {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.specs-table tr:last-child {
+  border-bottom: none;
+}
+
+.specs-key,
+.specs-val {
+  padding: 0.45rem 0;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  vertical-align: top;
+}
+
+.specs-key {
+  color: #6b7280;
+  width: 45%;
+  padding-right: 0.75rem;
+  white-space: nowrap;
+}
+
+.specs-val {
+  color: #d1d5db;
+}
