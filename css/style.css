@@ -412,6 +412,23 @@
   pointer-events: none;
 }
 
+/* ── Node thumbnails ──────────────────────────────────────── */
+.sp-node-thumb {
+  max-height: 52px;
+  width: auto;
+  display: block;
+  margin: 0 auto;
+  pointer-events: none;
+  -webkit-user-select: none;
+  user-select: none;
+  object-fit: contain;
+}
+
+/* Landscape amp image: cap width so it doesn't overwhelm neighbours */
+.sp-node-thumb--wide {
+  max-width: 80px;
+}
+
 /* ── Blurb info panel ─────────────────────────────────────── */
 .sp-blurb {
   max-width: 640px;
