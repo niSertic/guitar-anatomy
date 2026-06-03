@@ -1,7 +1,29 @@
 document.addEventListener('DOMContentLoaded', () => {
+  initNavbar();
   initHotspots();
   initSignalPath();
 });
+
+// ── Navbar hamburger (mobile) ─────────────────────────────────────────────────
+
+function initNavbar() {
+  const toggle = document.getElementById('nav-toggle');
+  const links  = document.getElementById('nav-links');
+  if (!toggle || !links) return;
+
+  toggle.addEventListener('click', () => {
+    const isOpen = links.classList.toggle('nav-open');
+    toggle.setAttribute('aria-expanded', String(isOpen));
+  });
+
+  // Close menu after tapping a link (smooth-scroll handles the navigation)
+  links.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      links.classList.remove('nav-open');
+      toggle.setAttribute('aria-expanded', 'false');
+    });
+  });
+}
 
 // ── Part content ──────────────────────────────────────────────────────────────
 const PART_CONTENT = {

@@ -6,7 +6,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Electric Guitar Anatomy</title>
 
+  <!-- Google Fonts: Sora (headings) + Inter (body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@500;600;700&display=swap" />
+
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans:    ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+            display: ['Sora', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
   <link rel="stylesheet" href="css/style.css" />
 
   <style>
@@ -19,20 +37,26 @@
 <body class="bg-gray-950 text-gray-100 min-h-screen font-sans">
 
   <!-- ===================== NAVBAR ===================== -->
-  <nav class="sticky top-0 z-50 bg-gray-950/90 backdrop-blur border-b border-gray-800">
+  <nav class="sticky top-0 z-50 bg-gray-950/90 backdrop-blur border-b border-gray-800 relative">
     <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
 
       <!-- Site title / brand -->
-      <span class="text-lg font-semibold tracking-wide text-white">
+      <span class="font-display text-lg font-semibold tracking-wide text-white">
         Electric Guitar Anatomy
       </span>
 
-      <!-- Section anchor links -->
-      <ul class="flex gap-6 text-sm text-gray-400">
-        <li><a href="#anatomy" class="hover:text-white transition-colors">Anatomy</a></li>
-        <li><a href="#signal-path" class="hover:text-white transition-colors">Signal Path</a></li>
-        <li><a href="#how-it-works" class="hover:text-white transition-colors">How It Works</a></li>
-        <li><a href="#specs" class="hover:text-white transition-colors">Specs</a></li>
+      <!-- Hamburger (visible on mobile only, styled + toggled via CSS/JS) -->
+      <button id="nav-toggle" class="nav-toggle"
+              aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-links">
+        <span></span><span></span><span></span>
+      </button>
+
+      <!-- Section anchor links: always visible sm+, dropdown on mobile -->
+      <ul id="nav-links" class="nav-links">
+        <li><a href="#anatomy">Anatomy</a></li>
+        <li><a href="#signal-path">Signal Path</a></li>
+        <li><a href="#how-it-works">How It Works</a></li>
+        <li><a href="#specs">Specs</a></li>
       </ul>
 
     </div>
@@ -59,7 +83,7 @@
 
       <!-- Text content -->
       <div class="relative z-10 max-w-3xl mx-auto">
-        <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight text-white mb-5 leading-none">
+        <h1 class="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight text-white mb-5 leading-none">
           Electric Guitar Anatomy
         </h1>
         <p class="text-lg md:text-xl text-gray-200 mb-4 max-w-lg mx-auto font-light tracking-wide">
@@ -69,7 +93,7 @@
           Explore every component, trace the signal path, and understand the physics behind the sound.
         </p>
         <a href="#anatomy"
-          class="inline-block px-8 py-3.5 rounded-full border border-gray-600 text-gray-200 hover:border-white hover:text-white transition-colors text-sm tracking-widest uppercase">
+          class="inline-block px-8 py-3.5 rounded-full border border-white/20 text-gray-200 hover:border-orange-500/60 hover:text-orange-500 transition-colors text-sm tracking-widest uppercase">
           Explore the anatomy ↓
         </a>
       </div>
@@ -86,7 +110,7 @@
     </section>
 
     <!-- ANATOMY ----------------------------------------------- -->
-    <section id="anatomy" class="min-h-screen px-6 py-24 max-w-6xl mx-auto">
+    <section id="anatomy" class="md:min-h-screen px-6 py-16 md:py-24 max-w-6xl mx-auto">
       <h2 class="text-3xl font-bold text-white mb-6">Anatomy</h2>
 
       <p id="anatomy-hint" class="anatomy-hint">Hover a component to highlight it &middot; Click to explore its role and
@@ -1376,10 +1400,10 @@
     </section>
 
     <!-- SIGNAL PATH ------------------------------------------- -->
-    <section id="signal-path" class="min-h-screen px-6 py-24 bg-gray-900/50">
+    <section id="signal-path" class="md:min-h-screen px-6 py-16 md:py-24 bg-gray-900/50">
       <div class="max-w-6xl mx-auto">
         <h2 class="text-3xl font-bold text-white mb-3">Signal Path</h2>
-        <p class="text-sm text-gray-500 mb-8 max-w-xl">
+        <p class="section-intro">
           From string vibration to amplified sound — six stages, one electrical journey.
           Click any node to learn what happens there.
         </p>
@@ -1467,9 +1491,9 @@
     </section>
 
     <!-- HOW IT WORKS ------------------------------------------ -->
-    <section id="how-it-works" class="px-6 py-24 max-w-6xl mx-auto">
+    <section id="how-it-works" class="px-6 py-16 md:py-24 max-w-6xl mx-auto">
       <h2 class="text-3xl font-bold text-white mb-3">How an Electric Guitar Works</h2>
-      <p class="hiw-intro">
+      <p class="section-intro">
         Strings, magnetism, and electronics — turning mechanical vibration into sound.
       </p>
 
@@ -1499,10 +1523,10 @@
     </section>
 
     <!-- SPECS ------------------------------------------------- -->
-    <section id="specs" class="px-6 py-24 bg-gray-900/50">
+    <section id="specs" class="px-6 py-16 md:py-24 bg-gray-900/50">
       <div class="max-w-6xl mx-auto">
         <h2 class="text-3xl font-bold text-white mb-3">Specifications</h2>
-        <p class="specs-intro">Typical values for a Stratocaster-style instrument — exact specs vary by model and era.</p>
+        <p class="section-intro">Typical values for a Stratocaster-style instrument — exact specs vary by model and era.</p>
 
         <div class="specs-groups">
 
@@ -1554,9 +1578,35 @@
   </main>
 
   <!-- ===================== FOOTER ===================== -->
-  <footer class="border-t border-gray-800 px-6 py-10 text-center text-xs text-gray-600">
-    <p class="mb-1">Electric Guitar Anatomy — an interactive exploded-view reference.</p>
-    <p>Guitar artwork sourced from a public-domain illustration. All other content © 2026.</p>
+  <footer class="border-t border-gray-800 px-6 py-12 text-center text-xs text-gray-600">
+    <div class="max-w-6xl mx-auto space-y-2">
+
+      <p class="text-gray-500">
+        Electric Guitar Anatomy — an interactive blueprint of the electric guitar.
+      </p>
+
+      <p>
+        Guitar illustration sourced from
+        <a href="https://openclipart.org"
+           target="_blank"
+           rel="noopener noreferrer"
+           class="underline underline-offset-2 decoration-gray-700 hover:text-gray-400 hover:decoration-gray-500 transition-colors">
+          OpenClipart
+        </a>
+        (public domain).
+      </p>
+
+      <p class="pt-2 border-t border-gray-800/60">
+        © 2026 · Electric Guitar Anatomy
+      </p>
+
+    </div>
+
+    <a href="#hero"
+       class="inline-block mt-6 text-gray-700 hover:text-gray-400 transition-colors tracking-widest uppercase"
+       aria-label="Back to top">
+      ↑ Back to top
+    </a>
   </footer>
 
   <script src="js/main.js" defer></script>
