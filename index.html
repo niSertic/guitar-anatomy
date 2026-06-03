@@ -42,17 +42,47 @@
   <main>
 
     <!-- HERO -------------------------------------------------- -->
-    <section id="hero" class="min-h-screen flex flex-col items-center justify-center text-center px-6">
-      <h1 class="text-5xl md:text-7xl font-bold tracking-tight text-white mb-4">
-        Electric Guitar Anatomy
-      </h1>
-      <p class="text-lg md:text-xl text-gray-400 mb-10 max-w-xl">
-        Explore every component of a Stratocaster — how it's built, how it sounds, and why it matters.
-      </p>
-      <a href="#anatomy"
-        class="inline-block px-8 py-3 rounded-full border border-gray-600 text-gray-200 hover:border-white hover:text-white transition-colors text-sm tracking-widest uppercase">
-        Explore the anatomy ↓
-      </a>
+    <section id="hero" class="relative min-h-screen flex flex-col items-center justify-center text-center px-6 overflow-hidden">
+
+      <!-- Decorative background guitar — non-interactive, purely atmospheric.
+           NOT id="guitar"; that id belongs to the live anatomy SVG only. -->
+      <img src="assets/guitar.svg"
+           class="hero-bg-guitar"
+           alt=""
+           aria-hidden="true" />
+
+      <!-- Vignette overlay keeps text legible over the faded guitar -->
+      <div class="hero-overlay" aria-hidden="true"></div>
+
+      <!-- Warm radial glow behind the text cluster — studio ambience -->
+      <div class="hero-glow" aria-hidden="true"></div>
+
+      <!-- Text content -->
+      <div class="relative z-10 max-w-3xl mx-auto">
+        <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight text-white mb-5 leading-none">
+          Electric Guitar Anatomy
+        </h1>
+        <p class="text-lg md:text-xl text-gray-200 mb-4 max-w-lg mx-auto font-light tracking-wide">
+          An interactive blueprint of the electric guitar.
+        </p>
+        <p class="text-sm md:text-base text-gray-500 mb-12 max-w-xl mx-auto leading-relaxed">
+          Explore every component, trace the signal path, and understand the physics behind the sound.
+        </p>
+        <a href="#anatomy"
+          class="inline-block px-8 py-3.5 rounded-full border border-gray-600 text-gray-200 hover:border-white hover:text-white transition-colors text-sm tracking-widest uppercase">
+          Explore the anatomy ↓
+        </a>
+      </div>
+
+      <!-- Scroll cue chevron — bounces subtly; animation respects prefers-reduced-motion -->
+      <div class="hero-scroll-cue" aria-hidden="true">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.5"
+             stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+
     </section>
 
     <!-- ANATOMY ----------------------------------------------- -->

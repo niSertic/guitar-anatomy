@@ -8,6 +8,98 @@
  *   - signal-path highlight states  — step 5
  */
 
+/* ── Hero section ────────────────────────────────────────── */
+
+/* Faded landscape guitar — decorative background, non-interactive */
+.hero-bg-guitar {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 130%;
+  max-width: none;
+  opacity: 0.15;
+  filter: blur(0.6px);
+  pointer-events: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Dark vignette — radiates outward from center so the guitar's
+   mid-section is the brightest point, edges stay very dark */
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      ellipse 85% 75% at 50% 50%,
+      transparent 15%,
+      rgba(3, 4, 8, 0.5) 60%,
+      rgba(3, 4, 8, 0.88) 100%
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(3, 4, 8, 0.35) 0%,
+      transparent 25%,
+      transparent 75%,
+      rgba(3, 4, 8, 0.45) 100%
+    );
+  pointer-events: none;
+}
+
+/* Warm amber glow at text center — reinforces studio/spotlight feel */
+.hero-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(680px, 90vw);
+  height: min(480px, 65vh);
+  background: radial-gradient(
+    ellipse at center,
+    rgba(160, 85, 30, 0.1) 0%,
+    rgba(100, 55, 15, 0.05) 45%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+/* Scroll cue chevron — centered via flexbox so keyframes only touch
+   translateY + opacity (pure-composite, no paint step) */
+.hero-scroll-cue {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.28);
+  animation: hero-cue-bounce 2.2s ease-in-out infinite;
+}
+
+@keyframes hero-cue-bounce {
+  0%, 100% { transform: translateY(0);    opacity: 0.28; }
+  50%       { transform: translateY(8px); opacity: 0.5;  }
+}
+
+/* On narrow viewports drop opacity slightly and widen to fill better */
+@media (max-width: 480px) {
+  .hero-bg-guitar {
+    opacity: 0.1;
+    width: 180%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-bg-guitar {
+    filter: none;
+  }
+  .hero-scroll-cue {
+    animation: none;
+    opacity: 0.28;
+  }
+}
+
 /* ── #anatomy layout ─────────────────────────────────────── */
 /* scroll-margin-top offsets anchor-jump by the sticky navbar height */
 #anatomy {
