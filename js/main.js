@@ -154,7 +154,7 @@ function initSignalPath() {
     });
   }
 
-  // (Re)draw the polyline through all node centers
+  // Draw the polyline through all node centers
   function buildPath() {
     if (svg.getBoundingClientRect().width === 0) return;
     const pts = nodePoints();
@@ -183,11 +183,27 @@ function initSignalPath() {
     blurb.classList.remove('sp-blurb-hidden');
   }
 
+  function deactivateNode() {
+    nodeEls.forEach(el => el.classList.remove('sp-node-active'));
+    blurb.classList.add('sp-blurb-hidden');
+  }
+
   nodeEls.forEach(el => {
     el.addEventListener('click', () => activateNode(el.dataset.sp));
     el.addEventListener('keydown', e => {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activateNode(el.dataset.sp); }
     });
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') deactivateNode();
+  });
+
+  document.addEventListener('click', e => {
+    if (blurb.classList.contains('sp-blurb-hidden')) return;
+    if (nodeEls.some(el => el.contains(e.target))) return;
+    if (blurb.contains(e.target)) return;
+    deactivateNode();
   });
 
   // ── Pulse animation ───────────────────────────────────────
@@ -360,6 +376,11 @@ function initHotspots() {
     if (parts.some(p => p.contains(e.target))) return;
     if (listContainer && listContainer.contains(e.target)) return;
     closeCard();
+  });
+
+  // Escape key closes the card (keyboard accessibility).
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && selectedPart) closeCard();
   });
 
   // ── Parts list build ────────────────────────────────────────

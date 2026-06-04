@@ -128,11 +128,10 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: -0.02em;
 }
 
-/* Heading-like CSS component classes (cards, signal path, how-it-works, specs) */
-.card-title,
-.sp-blurb-title,
-.hiw-block-heading,
-.specs-group-heading {
+/* .sp-blurb-title is a <p>, so it doesn't inherit from the h1–h6 rule above.
+   .card-title, .hiw-block-heading, .specs-group-heading are all <h3> and
+   already covered — no extra declaration needed for those. */
+.sp-blurb-title {
   font-family: 'Sora', ui-sans-serif, system-ui, sans-serif;
 }
 
@@ -218,15 +217,7 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .hero-bg-guitar {
-    filter: none;
-  }
-  .hero-scroll-cue {
-    animation: none;
-    opacity: 0.28;
-  }
-}
+/* ── prefers-reduced-motion (all sections) — see end of file ─ */
 
 /* ── #anatomy layout ─────────────────────────────────────── */
 /* scroll-margin-top offsets anchor-jump by the sticky navbar height */
@@ -436,15 +427,7 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-/* ── Reduced motion ───────────────────────────────────────── */
-@media (prefers-reduced-motion: reduce) {
-  #guitar [data-part],
-  .glass-card,
-  .card-close,
-  .parts-list-item {
-    transition: none !important;
-  }
-}
+/* ── Reduced motion — anatomy (merged into single block below) */
 
 /* ═══════════════════════════════════════════════════════════
    Signal Path section
@@ -717,17 +700,7 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-/* ── Signal path reduced motion ───────────────────────────── */
-@media (prefers-reduced-motion: reduce) {
-  .sp-node-ring,
-  .sp-node-label,
-  .sp-node-num,
-  .sp-blurb,
-  .sp-play-btn,
-  .sp-dot {
-    transition: none !important;
-  }
-}
+/* ── Reduced motion — signal path (merged into single block below) */
 
 /* ── How It Works ─────────────────────────────────────────── */
 #how-it-works {
@@ -846,4 +819,27 @@ h1, h2, h3, h4, h5, h6 {
 
 .specs-val {
   color: #d1d5db;
+}
+
+/* ── prefers-reduced-motion (all sections consolidated) ───── */
+@media (prefers-reduced-motion: reduce) {
+  /* Hero */
+  .hero-bg-guitar    { filter: none; }
+  .hero-scroll-cue   { animation: none; opacity: 0.28; }
+
+  /* Anatomy */
+  #guitar [data-part],
+  .glass-card,
+  .card-close,
+  .parts-list-item,
+
+  /* Signal path */
+  .sp-node-ring,
+  .sp-node-label,
+  .sp-node-num,
+  .sp-blurb,
+  .sp-play-btn,
+  .sp-dot {
+    transition: none !important;
+  }
 }
