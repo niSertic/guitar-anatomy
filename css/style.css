@@ -1,13 +1,3 @@
-/*
- * guitar-anatomy — custom styles
- *
- * Covers things Tailwind can't do cleanly:
- *   - typography system (Sora + Inter)
- *   - guitar stage layout & radial vignette
- *   - hotspot highlight / dim states
- *   - glassmorphism info card (.glass-card)
- *   - signal-path highlight states
- */
 
 /* ── Navbar responsive ────────────────────────────────────── */
 
@@ -107,7 +97,6 @@
 
 /* ── Base typography ──────────────────────────────────────── */
 
-/* Inter for all body text; 1.6 line-height aids readability on dark bg */
 body {
   font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
   font-size: 1rem;
@@ -116,13 +105,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Sora for all semantic headings */
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Sora', ui-sans-serif, system-ui, sans-serif;
   line-height: 1.15;
 }
 
-/* Hero title — display-scale heading with tight tracking */
 #hero h1 {
   line-height: 1.0;
   letter-spacing: -0.02em;
@@ -152,8 +139,7 @@ h1, h2, h3, h4, h5, h6 {
   user-select: none;
 }
 
-/* Dark vignette — radiates outward from center so the guitar's
-   mid-section is the brightest point, edges stay very dark */
+
 .hero-overlay {
   position: absolute;
   inset: 0;
@@ -174,7 +160,6 @@ h1, h2, h3, h4, h5, h6 {
   pointer-events: none;
 }
 
-/* Warm amber glow at text center — reinforces studio/spotlight feel */
 .hero-glow {
   position: absolute;
   top: 50%;
@@ -191,8 +176,6 @@ h1, h2, h3, h4, h5, h6 {
   pointer-events: none;
 }
 
-/* Scroll cue chevron — centered via flexbox so keyframes only touch
-   translateY + opacity (pure-composite, no paint step) */
 .hero-scroll-cue {
   position: absolute;
   bottom: 2.5rem;
@@ -217,7 +200,6 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-/* ── prefers-reduced-motion (all sections) — see end of file ─ */
 
 /* ── #anatomy layout ─────────────────────────────────────── */
 /* scroll-margin-top offsets anchor-jump by the sticky navbar height */
@@ -226,7 +208,6 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ── Guitar wrapper ───────────────────────────────────────── */
-/* Landscape guitar: wide and short (~2.3:1), so width drives the layout */
 .guitar-wrapper {
   max-width: 1100px;
   margin: 0 auto;
@@ -237,7 +218,7 @@ h1, h2, h3, h4, h5, h6 {
   position: relative;
   max-width: 1100px;
   margin: 1rem auto 0;
-  /* Subtle warm radial glow behind the guitar — dark studio feel */
+ 
   background: radial-gradient(
     ellipse 70% 55% at 50% 48%,
     rgba(160, 90, 50, 0.12) 0%,
@@ -247,7 +228,6 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: 12px;
 }
 
-/* SVG fills container width; height follows the 1148:499 viewBox ratio */
 .guitar-stage svg {
   display: block;
   width: 100%;

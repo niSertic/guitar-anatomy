@@ -5,8 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Electric Guitar Anatomy</title>
-
-  <!-- Google Fonts: Sora (headings) + Inter (body) -->
+<
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@500;600;700&display=swap" />
@@ -40,18 +39,17 @@
   <nav class="sticky top-0 z-50 bg-gray-950/90 backdrop-blur border-b border-gray-800 relative">
     <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
 
-      <!-- Site title / brand -->
       <span class="font-display text-lg font-semibold tracking-wide text-white">
         Electric Guitar Anatomy
       </span>
 
-      <!-- Hamburger (visible on mobile only, styled + toggled via CSS/JS) -->
+      <!-- Hamburger (visible on mobile only) -->
       <button id="nav-toggle" class="nav-toggle"
               aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-links">
         <span></span><span></span><span></span>
       </button>
 
-      <!-- Section anchor links: always visible sm+, dropdown on mobile -->
+      
       <ul id="nav-links" class="nav-links">
         <li><a href="#anatomy">Anatomy</a></li>
         <li><a href="#signal-path">Signal Path</a></li>
@@ -68,17 +66,13 @@
     <!-- HERO -------------------------------------------------- -->
     <section id="hero" class="relative min-h-screen flex flex-col items-center justify-center text-center px-6 overflow-hidden">
 
-      <!-- Decorative background guitar — non-interactive, purely atmospheric.
-           NOT id="guitar"; that id belongs to the live anatomy SVG only. -->
       <img src="assets/guitar.svg"
            class="hero-bg-guitar"
            alt=""
            aria-hidden="true" />
 
-      <!-- Vignette overlay keeps text legible over the faded guitar -->
       <div class="hero-overlay" aria-hidden="true"></div>
 
-      <!-- Warm radial glow behind the text cluster — studio ambience -->
       <div class="hero-glow" aria-hidden="true"></div>
 
       <!-- Text content -->
@@ -117,6 +111,227 @@
 
       <div class="guitar-wrapper">
         <div class="guitar-stage">
+        </div><!-- /.guitar-stage -->
+
+        <div id="parts-list" class="parts-list" role="list" aria-label="Guitar components"></div>
+
+      </div><!-- /.guitar-wrapper -->
+    </section>
+
+    <!-- SIGNAL PATH ------------------------------------------- -->
+    <section id="signal-path" class="md:min-h-screen px-6 py-16 md:py-24 bg-gray-900/50">
+      <div class="max-w-6xl mx-auto">
+        <h2 class="text-3xl font-bold text-white mb-3">Signal Path</h2>
+        <p class="section-intro">
+          From string vibration to amplified sound — six stages, one electrical journey.
+          Click any node to learn what happens there.
+        </p>
+
+        <div class="sp-controls">
+          <button id="sp-play-btn" type="button" class="sp-play-btn" aria-label="Play signal pulse animation">
+            Play signal
+          </button>
+        </div>
+
+        <div class="sp-diagram-wrap" id="sp-diagram">
+          <!-- SVG overlay: connector track + animated pulse dot -->
+          <svg class="sp-connector-svg" id="sp-svg" aria-hidden="true" focusable="false">
+            <defs>
+              <filter id="sp-glow-filter" color-interpolation-filters="sRGB"
+                      x="-150%" y="-150%" width="400%" height="400%">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
+            <path id="sp-track" class="sp-track" fill="none"
+                  stroke-linecap="round" stroke-linejoin="round" />
+            <circle id="sp-dot" class="sp-dot" r="8" cx="-200" cy="-200" />
+          </svg>
+
+          <!-- Signal-chain nodes -->
+          <div class="sp-nodes" id="sp-nodes">
+
+            <div class="sp-node" data-sp="strings"
+                 tabindex="0" role="button" aria-label="Strings — click for details">
+              <div class="sp-node-ring"><span class="sp-node-num">1</span></div>
+              <span class="sp-node-label">Strings</span>
+              <img src="assets/strings.png" alt="Guitar strings" class="sp-node-thumb" draggable="false">
+            </div>
+
+            <div class="sp-node" data-sp="pickups"
+                 tabindex="0" role="button" aria-label="Pickups — click for details">
+              <div class="sp-node-ring"><span class="sp-node-num">2</span></div>
+              <span class="sp-node-label">Pickups</span>
+              <img src="assets/pickups.png" alt="Single-coil pickups" class="sp-node-thumb" draggable="false">
+            </div>
+
+            <div class="sp-node" data-sp="selector"
+                 tabindex="0" role="button" aria-label="Pickup Selector — click for details">
+              <div class="sp-node-ring"><span class="sp-node-num">3</span></div>
+              <span class="sp-node-label">Pickup Selector</span>
+              <img src="assets/switch.png" alt="Five-way pickup selector switch" class="sp-node-thumb" draggable="false">
+            </div>
+
+            <div class="sp-node" data-sp="voltone"
+                 tabindex="0" role="button" aria-label="Volume and Tone — click for details">
+              <div class="sp-node-ring"><span class="sp-node-num">4</span></div>
+              <span class="sp-node-label">Volume &amp; Tone</span>
+              <img src="assets/controls.png" alt="Volume and tone knobs" class="sp-node-thumb" draggable="false">
+            </div>
+
+            <div class="sp-node" data-sp="jack"
+                 tabindex="0" role="button" aria-label="Output Jack — click for details">
+              <div class="sp-node-ring"><span class="sp-node-num">5</span></div>
+              <span class="sp-node-label">Output Jack</span>
+              <img src="assets/jack.png" alt="Output jack" class="sp-node-thumb" draggable="false">
+            </div>
+
+            <div class="sp-node" data-sp="amp"
+                 tabindex="0" role="button" aria-label="Amplifier — click for details">
+              <div class="sp-node-ring"><span class="sp-node-num">6</span></div>
+              <span class="sp-node-label">Amplifier</span>
+              <img src="assets/amp.png" alt="Guitar amplifier" class="sp-node-thumb sp-node-thumb--wide" draggable="false">
+            </div>
+
+          </div><!-- /.sp-nodes -->
+        </div><!-- /.sp-diagram-wrap -->
+
+        <!-- Info panel (hidden until a node is selected) -->
+        <div class="sp-blurb sp-blurb-hidden" id="sp-blurb"
+             role="region" aria-live="polite" aria-label="Signal path node details">
+          <p class="sp-blurb-title" id="sp-blurb-title"></p>
+          <p class="sp-blurb-text"  id="sp-blurb-text"></p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS ------------------------------------------ -->
+    <section id="how-it-works" class="px-6 py-16 md:py-24 max-w-6xl mx-auto">
+      <h2 class="text-3xl font-bold text-white mb-3">How an Electric Guitar Works</h2>
+      <p class="section-intro">
+        Strings, magnetism, and electronics — turning mechanical vibration into sound.
+      </p>
+
+      <div class="hiw-grid">
+
+        <article class="hiw-block">
+          <h3 class="hiw-block-heading">Magnetized Strings</h3>
+          <p class="hiw-block-body">Each pickup is a coil of fine wire wound thousands of times around permanent magnet pole pieces. The magnets impose a fixed magnetic field on the steel strings above them, effectively making a short length of each string part of the magnetic circuit. At rest, the field through the coil is steady and no signal is produced.</p>
+        </article>
+
+        <article class="hiw-block">
+          <h3 class="hiw-block-heading">Induction: Vibration Becomes Voltage</h3>
+          <p class="hiw-block-body">When a plucked string vibrates, it moves the magnetized region through the coil's magnetic field. By Faraday's law of induction, a changing magnetic flux through a coil induces a voltage across it. The string's motion generates a small alternating current that mirrors the vibration — its frequency sets the pitch, and the complex waveform of fundamental plus harmonics carries the timbre that makes the instrument recognizable.</p>
+        </article>
+
+        <article class="hiw-block">
+          <h3 class="hiw-block-heading">Shaping the Signal</h3>
+          <p class="hiw-block-body">This raw signal is weak and high-impedance. Before it leaves the guitar, the pickup selector chooses which coil or combination feeds the circuit, the volume potentiometer sets its level, and the tone control bleeds high frequencies to ground through a capacitor. The result is a shaped audio signal of only a few hundred millivolts — far too quiet to drive a speaker on its own.</p>
+        </article>
+
+        <article class="hiw-block">
+          <h3 class="hiw-block-heading">Amplification and Sound</h3>
+          <p class="hiw-block-body">The instrument cable carries the signal to an amplifier, which boosts its voltage and current enough to move a loudspeaker cone. The cone displaces air in step with the original waveform, recreating the string's vibration as pressure waves — the sound you hear. Every stage from string to speaker preserves the same waveform; the amplifier simply makes it powerful enough to be heard.</p>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- SPECS ------------------------------------------------- -->
+    <section id="specs" class="px-6 py-16 md:py-24 bg-gray-900/50">
+      <div class="max-w-6xl mx-auto">
+        <h2 class="text-3xl font-bold text-white mb-3">Specifications</h2>
+        <p class="section-intro">Typical values for a Stratocaster-style instrument — exact specs vary by model and era.</p>
+
+        <div class="specs-groups">
+
+          <div class="specs-group">
+            <h3 class="specs-group-heading">Body &amp; Neck</h3>
+            <table class="specs-table">
+              <tbody>
+                <tr><td class="specs-key">Body wood</td><td class="specs-val">Alder (ash on some models)</td></tr>
+                <tr><td class="specs-key">Neck wood</td><td class="specs-val">Maple, bolt-on</td></tr>
+                <tr><td class="specs-key">Fretboard</td><td class="specs-val">Maple or rosewood</td></tr>
+                <tr><td class="specs-key">Neck profile</td><td class="specs-val">"C" shape</td></tr>
+                <tr><td class="specs-key">Scale length</td><td class="specs-val">25.5&#x2033; (648&#x202F;mm)</td></tr>
+                <tr><td class="specs-key">Frets</td><td class="specs-val">21–22, medium-jumbo</td></tr>
+                <tr><td class="specs-key">Fretboard radius</td><td class="specs-val">9.5&#x2033; modern&#x202F;/&#x202F;7.25&#x2033; vintage</td></tr>
+                <tr><td class="specs-key">Nut width</td><td class="specs-val">1.650&#x2033; (42&#x202F;mm)</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="specs-group">
+            <h3 class="specs-group-heading">Electronics</h3>
+            <table class="specs-table">
+              <tbody>
+                <tr><td class="specs-key">Pickups</td><td class="specs-val">Three single-coil</td></tr>
+                <tr><td class="specs-key">Configuration</td><td class="specs-val">SSS</td></tr>
+                <tr><td class="specs-key">Controls</td><td class="specs-val">1 master volume, 2 tone</td></tr>
+                <tr><td class="specs-key">Switching</td><td class="specs-val">5-way blade selector</td></tr>
+                <tr><td class="specs-key">Output</td><td class="specs-val">Mono &#x00BC;&#x2033; jack</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="specs-group">
+            <h3 class="specs-group-heading">Hardware</h3>
+            <table class="specs-table">
+              <tbody>
+                <tr><td class="specs-key">Bridge</td><td class="specs-val">6-saddle synchronized tremolo</td></tr>
+                <tr><td class="specs-key">Tuners</td><td class="specs-val">Sealed die-cast (~14:1 ratio)</td></tr>
+                <tr><td class="specs-key">Strings</td><td class="specs-val">.009–.042 (typical light gauge)</td></tr>
+                <tr><td class="specs-key">String spacing</td><td class="specs-val">~2.2&#x2033; at bridge</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="border-t border-gray-800 px-6 py-12 text-center text-xs text-gray-600">
+    <div class="max-w-6xl mx-auto space-y-2">
+
+      <p class="text-gray-500">
+        Electric Guitar Anatomy — an interactive blueprint of the electric guitar.
+      </p>
+
+      <p>
+        Guitar illustration sourced from
+        <a href="https://openclipart.org"
+           target="_blank"
+           rel="noopener noreferrer"
+           class="underline underline-offset-2 decoration-gray-700 hover:text-gray-400 hover:decoration-gray-500 transition-colors">
+          OpenClipart
+        </a>
+        (public domain).
+      </p>
+
+      <p class="pt-2 border-t border-gray-800/60">
+        © 2026 · Electric Guitar Anatomy
+      </p>
+
+    </div>
+
+    <a href="#hero"
+       class="inline-block mt-6 text-gray-700 hover:text-gray-400 transition-colors tracking-widest uppercase"
+       aria-label="Back to top">
+      ↑ Back to top
+    </a>
+  </footer>
+
+  <script src="js/main.js" defer></script>
+
+
+  <template id="guitar-tpl">
           <svg xmlns="http://www.w3.org/2000/svg" id="guitar" viewBox="0 0 1148 499" width="1148" height="499">
             <defs>
               <radialGradient href="#a" id="ar" cx="309.4" cy="965.2" r="6.9" fx="309.4" fy="965.2"
@@ -1391,225 +1606,8 @@
               </g>
             </g>
           </svg>
-        </div><!-- /.guitar-stage -->
 
-        <div id="parts-list" class="parts-list" role="list" aria-label="Guitar components"></div>
-
-      </div><!-- /.guitar-wrapper -->
-    </section>
-
-    <!-- SIGNAL PATH ------------------------------------------- -->
-    <section id="signal-path" class="md:min-h-screen px-6 py-16 md:py-24 bg-gray-900/50">
-      <div class="max-w-6xl mx-auto">
-        <h2 class="text-3xl font-bold text-white mb-3">Signal Path</h2>
-        <p class="section-intro">
-          From string vibration to amplified sound — six stages, one electrical journey.
-          Click any node to learn what happens there.
-        </p>
-
-        <div class="sp-controls">
-          <button id="sp-play-btn" type="button" class="sp-play-btn" aria-label="Play signal pulse animation">
-            Play signal
-          </button>
-        </div>
-
-        <div class="sp-diagram-wrap" id="sp-diagram">
-          <!-- SVG overlay: connector track + animated pulse dot -->
-          <svg class="sp-connector-svg" id="sp-svg" aria-hidden="true" focusable="false">
-            <defs>
-              <filter id="sp-glow-filter" color-interpolation-filters="sRGB"
-                      x="-150%" y="-150%" width="400%" height="400%">
-                <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur" />
-                <feMerge>
-                  <feMergeNode in="blur" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-            </defs>
-            <path id="sp-track" class="sp-track" fill="none"
-                  stroke-linecap="round" stroke-linejoin="round" />
-            <circle id="sp-dot" class="sp-dot" r="8" cx="-200" cy="-200" />
-          </svg>
-
-          <!-- Signal-chain nodes -->
-          <div class="sp-nodes" id="sp-nodes">
-
-            <div class="sp-node" data-sp="strings"
-                 tabindex="0" role="button" aria-label="Strings — click for details">
-              <div class="sp-node-ring"><span class="sp-node-num">1</span></div>
-              <span class="sp-node-label">Strings</span>
-              <img src="assets/strings.png" alt="Guitar strings" class="sp-node-thumb" draggable="false">
-            </div>
-
-            <div class="sp-node" data-sp="pickups"
-                 tabindex="0" role="button" aria-label="Pickups — click for details">
-              <div class="sp-node-ring"><span class="sp-node-num">2</span></div>
-              <span class="sp-node-label">Pickups</span>
-              <img src="assets/pickups.png" alt="Single-coil pickups" class="sp-node-thumb" draggable="false">
-            </div>
-
-            <div class="sp-node" data-sp="selector"
-                 tabindex="0" role="button" aria-label="Pickup Selector — click for details">
-              <div class="sp-node-ring"><span class="sp-node-num">3</span></div>
-              <span class="sp-node-label">Pickup Selector</span>
-              <img src="assets/switch.png" alt="Five-way pickup selector switch" class="sp-node-thumb" draggable="false">
-            </div>
-
-            <div class="sp-node" data-sp="voltone"
-                 tabindex="0" role="button" aria-label="Volume and Tone — click for details">
-              <div class="sp-node-ring"><span class="sp-node-num">4</span></div>
-              <span class="sp-node-label">Volume &amp; Tone</span>
-              <img src="assets/controls.png" alt="Volume and tone knobs" class="sp-node-thumb" draggable="false">
-            </div>
-
-            <div class="sp-node" data-sp="jack"
-                 tabindex="0" role="button" aria-label="Output Jack — click for details">
-              <div class="sp-node-ring"><span class="sp-node-num">5</span></div>
-              <span class="sp-node-label">Output Jack</span>
-              <img src="assets/jack.png" alt="Output jack" class="sp-node-thumb" draggable="false">
-            </div>
-
-            <div class="sp-node" data-sp="amp"
-                 tabindex="0" role="button" aria-label="Amplifier — click for details">
-              <div class="sp-node-ring"><span class="sp-node-num">6</span></div>
-              <span class="sp-node-label">Amplifier</span>
-              <img src="assets/amp.png" alt="Guitar amplifier" class="sp-node-thumb sp-node-thumb--wide" draggable="false">
-            </div>
-
-          </div><!-- /.sp-nodes -->
-        </div><!-- /.sp-diagram-wrap -->
-
-        <!-- Info blurb panel (hidden until a node is selected) -->
-        <div class="sp-blurb sp-blurb-hidden" id="sp-blurb"
-             role="region" aria-live="polite" aria-label="Signal path node details">
-          <p class="sp-blurb-title" id="sp-blurb-title"></p>
-          <p class="sp-blurb-text"  id="sp-blurb-text"></p>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- HOW IT WORKS ------------------------------------------ -->
-    <section id="how-it-works" class="px-6 py-16 md:py-24 max-w-6xl mx-auto">
-      <h2 class="text-3xl font-bold text-white mb-3">How an Electric Guitar Works</h2>
-      <p class="section-intro">
-        Strings, magnetism, and electronics — turning mechanical vibration into sound.
-      </p>
-
-      <div class="hiw-grid">
-
-        <article class="hiw-block">
-          <h3 class="hiw-block-heading">Magnetized Strings</h3>
-          <p class="hiw-block-body">Each pickup is a coil of fine wire wound thousands of times around permanent magnet pole pieces. The magnets impose a fixed magnetic field on the steel strings above them, effectively making a short length of each string part of the magnetic circuit. At rest, the field through the coil is steady and no signal is produced.</p>
-        </article>
-
-        <article class="hiw-block">
-          <h3 class="hiw-block-heading">Induction: Vibration Becomes Voltage</h3>
-          <p class="hiw-block-body">When a plucked string vibrates, it moves the magnetized region through the coil's magnetic field. By Faraday's law of induction, a changing magnetic flux through a coil induces a voltage across it. The string's motion generates a small alternating current that mirrors the vibration — its frequency sets the pitch, and the complex waveform of fundamental plus harmonics carries the timbre that makes the instrument recognizable.</p>
-        </article>
-
-        <article class="hiw-block">
-          <h3 class="hiw-block-heading">Shaping the Signal</h3>
-          <p class="hiw-block-body">This raw signal is weak and high-impedance. Before it leaves the guitar, the pickup selector chooses which coil or combination feeds the circuit, the volume potentiometer sets its level, and the tone control bleeds high frequencies to ground through a capacitor. The result is a shaped audio signal of only a few hundred millivolts — far too quiet to drive a speaker on its own.</p>
-        </article>
-
-        <article class="hiw-block">
-          <h3 class="hiw-block-heading">Amplification and Sound</h3>
-          <p class="hiw-block-body">The instrument cable carries the signal to an amplifier, which boosts its voltage and current enough to move a loudspeaker cone. The cone displaces air in step with the original waveform, recreating the string's vibration as pressure waves — the sound you hear. Every stage from string to speaker preserves the same waveform; the amplifier simply makes it powerful enough to be heard.</p>
-        </article>
-
-      </div>
-    </section>
-
-    <!-- SPECS ------------------------------------------------- -->
-    <section id="specs" class="px-6 py-16 md:py-24 bg-gray-900/50">
-      <div class="max-w-6xl mx-auto">
-        <h2 class="text-3xl font-bold text-white mb-3">Specifications</h2>
-        <p class="section-intro">Typical values for a Stratocaster-style instrument — exact specs vary by model and era.</p>
-
-        <div class="specs-groups">
-
-          <div class="specs-group">
-            <h3 class="specs-group-heading">Body &amp; Neck</h3>
-            <table class="specs-table">
-              <tbody>
-                <tr><td class="specs-key">Body wood</td><td class="specs-val">Alder (ash on some models)</td></tr>
-                <tr><td class="specs-key">Neck wood</td><td class="specs-val">Maple, bolt-on</td></tr>
-                <tr><td class="specs-key">Fretboard</td><td class="specs-val">Maple or rosewood</td></tr>
-                <tr><td class="specs-key">Neck profile</td><td class="specs-val">"C" shape</td></tr>
-                <tr><td class="specs-key">Scale length</td><td class="specs-val">25.5&#x2033; (648&#x202F;mm)</td></tr>
-                <tr><td class="specs-key">Frets</td><td class="specs-val">21–22, medium-jumbo</td></tr>
-                <tr><td class="specs-key">Fretboard radius</td><td class="specs-val">9.5&#x2033; modern&#x202F;/&#x202F;7.25&#x2033; vintage</td></tr>
-                <tr><td class="specs-key">Nut width</td><td class="specs-val">1.650&#x2033; (42&#x202F;mm)</td></tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div class="specs-group">
-            <h3 class="specs-group-heading">Electronics</h3>
-            <table class="specs-table">
-              <tbody>
-                <tr><td class="specs-key">Pickups</td><td class="specs-val">Three single-coil</td></tr>
-                <tr><td class="specs-key">Configuration</td><td class="specs-val">SSS</td></tr>
-                <tr><td class="specs-key">Controls</td><td class="specs-val">1 master volume, 2 tone</td></tr>
-                <tr><td class="specs-key">Switching</td><td class="specs-val">5-way blade selector</td></tr>
-                <tr><td class="specs-key">Output</td><td class="specs-val">Mono &#x00BC;&#x2033; jack</td></tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div class="specs-group">
-            <h3 class="specs-group-heading">Hardware</h3>
-            <table class="specs-table">
-              <tbody>
-                <tr><td class="specs-key">Bridge</td><td class="specs-val">6-saddle synchronized tremolo</td></tr>
-                <tr><td class="specs-key">Tuners</td><td class="specs-val">Sealed die-cast (~14:1 ratio)</td></tr>
-                <tr><td class="specs-key">Strings</td><td class="specs-val">.009–.042 (typical light gauge)</td></tr>
-                <tr><td class="specs-key">String spacing</td><td class="specs-val">~2.2&#x2033; at bridge</td></tr>
-              </tbody>
-            </table>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- ===================== FOOTER ===================== -->
-  <footer class="border-t border-gray-800 px-6 py-12 text-center text-xs text-gray-600">
-    <div class="max-w-6xl mx-auto space-y-2">
-
-      <p class="text-gray-500">
-        Electric Guitar Anatomy — an interactive blueprint of the electric guitar.
-      </p>
-
-      <p>
-        Guitar illustration sourced from
-        <a href="https://openclipart.org"
-           target="_blank"
-           rel="noopener noreferrer"
-           class="underline underline-offset-2 decoration-gray-700 hover:text-gray-400 hover:decoration-gray-500 transition-colors">
-          OpenClipart
-        </a>
-        (public domain).
-      </p>
-
-      <p class="pt-2 border-t border-gray-800/60">
-        © 2026 · Electric Guitar Anatomy
-      </p>
-
-    </div>
-
-    <a href="#hero"
-       class="inline-block mt-6 text-gray-700 hover:text-gray-400 transition-colors tracking-widest uppercase"
-       aria-label="Back to top">
-      ↑ Back to top
-    </a>
-  </footer>
-
-  <script src="js/main.js" defer></script>
-
+  </template>
 </body>
 
 </html>

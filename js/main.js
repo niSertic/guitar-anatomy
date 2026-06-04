@@ -286,6 +286,11 @@ function initSignalPath() {
 // ── Anatomy hotspots ──────────────────────────────────────────────────────────
 
 function initHotspots() {
+  // Move the SVG from the inert <template> into the live guitar stage.
+  const tpl   = document.getElementById('guitar-tpl');
+  const stage = document.querySelector('.guitar-stage');
+  if (tpl && stage) stage.appendChild(tpl.content.firstElementChild);
+
   const guitar = document.getElementById('guitar');
   if (!guitar) return;
 
@@ -369,7 +374,7 @@ function initHotspots() {
     });
   });
 
-  // Close card when clicking outside the card, any SVG part, and the parts list.
+  // Close card when clicking outside the card.
   document.addEventListener('click', e => {
     if (!selectedPart) return;
     if (card.contains(e.target)) return;
